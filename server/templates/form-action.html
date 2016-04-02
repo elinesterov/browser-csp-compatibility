@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block script %}
+    <script>
+        window.addEventListener('load', function() {
+                setTimeout(function() {
+                    document.getElementById('submit').click();
+                }, 0);
+            });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <form action='/echo' id='form' method='{{ method }}'>
+        <input type='text' name='fieldname' value='fieldvalue'>
+        <input type='submit' id='submit' value='submit'>
+    </form>
+{% endblock %}

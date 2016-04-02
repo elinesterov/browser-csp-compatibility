@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block script %}
+    <script>
+        var base = document.createElement('base');
+        base.href = 'http://example.com/';
+        document.head.appendChild(base);
+    </script>
+{% endblock %}
+
+{% block body %}
+    <!-- <div id="result"></div> -->
+    <script>
+        function addTestReults(results){
+            res = document.createElement('div');
+            res.setAttribute('id', 'result');
+            res.innerHTML = results;
+            document.body.appendChild(res);
+            console.log({result: result});
+        }
+        var result = document.URL == document.baseURI ? 'Pass': 'Fail';
+        {% if allow %}
+        var result = document.URL !== document.baseURI ? 'Pass': 'Fail';
+        {% endif %}
+        // document.body.innerHTML = result;
+        // document.getElementById('result').innerHTML = result;
+        addTestReults(result);
+    </script>
+{% endblock %}

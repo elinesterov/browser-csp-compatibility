@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtualenv
+venv/
+ENV/
+
+# project specific env
+
+# pytest cache
+.cache
+
+# pytest-json reports
+*.json
+
+# test server log
+server.out
+
+# java files e.g. selenium-server
+*.jar

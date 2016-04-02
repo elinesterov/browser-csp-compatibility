@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block body %}
+<pre id="console"></pre>
+<script>
+    function log(msg){
+        document.getElementById("console").appendChild(document.createTextNode(msg + "\n"));
+        console.log(msg);
+    }
+
+    try {
+        {% if xhr %}
+        var xhr = new XMLHttpRequest;
+        xhr.open("GET", "/js/alert/test", true);
+        xhr.send();
+        {% elif beacon %}
+        var es = navigator.sendBeacon("/echo", "blah");
+        {% elif event %}
+        var es = new EventSource("/events");
+        {% elif websocket %}
+        var ws = new WebSocket("ws://127.0.0.1:8000/echo");
+        {% endif %}
+
+        {% if allow %}
+        log("Pass");
+        {% else %}
+        log("Fail");
+        {% endif %}
+    } catch(e) {
+        {% if allow %}
+        log("Fail");
+        {% else %}
+        log("Pass");
+        {% endif %}
+    }
+</script>
+{% endblock %}

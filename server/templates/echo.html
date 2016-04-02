@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block body %}
+Method: {{ request.method }}<br/>
+<table border="1" cellpadding="1" cellspacing="1" id="params">
+    {% for key, values in params.iteritems() %}
+    <tr>
+        <th>{{ key }}</th>
+        <td>{% for value in values %}{{ value }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+Headers:
+<table border="1" cellpadding="1" cellspacing="1" id="headers">
+    {% for key, value in headers.iteritems() %}
+    <tr>
+        <th>{{ key }}</th>
+        <td>{{ value }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

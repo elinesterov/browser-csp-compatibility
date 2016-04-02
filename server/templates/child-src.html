@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block script %}
+    <script src="/static/js/child-src-test.js"></script>
+{% endblock %}
+
+{% block body %}
+    <script>
+        {% if frame %}
+            {% if allow %}
+            injectFrame("/alert/pass", EXPECT_LOAD);
+            {% else %}
+            injectFrame("/alert/fail", EXPECT_BLOCK);
+            {% endif %}
+        {% endif %}
+
+        {% if worker %}
+            {% if allow %}
+            injectWorker("/js/alert/pass", EXPECT_LOAD);
+            {% else %}
+            injectWorker("/js/alert/fail", EXPECT_BLOCK);
+            {% endif %}
+        {% endif %}
+
+        {% if shared %}
+            {% if allow %}
+            injectSharedWorker("/js/alert/pass", EXPECT_LOAD);
+            {% else %}
+            injectSharedWorker("/js/alert/fail", EXPECT_BLOCK);
+            {% endif %}
+        {% endif %}
+    </script>
+{% endblock %}

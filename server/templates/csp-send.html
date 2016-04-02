@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block script %}
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            // t.step(function () { assert_true(xhr.status === 404); t.done(); });
+            console.log(xhr.status);
+            if (xhr.status == 200){
+                console.log('pass');
+            }
+            else{
+                console.log('fail');
+            }
+        };
+        xhr.open("GET",
+                 // "/static/images/download.jpeg",
+                 "/test-header/csp/active",
+                 true);
+//        xhr.setRequestHeader("CSP", "active");
+        xhr.send();
+    </script>
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
