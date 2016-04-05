@@ -26,22 +26,15 @@ def base_uri():
     http://127.0.0.1:8000/base-uri?header=true&allow=true&policy=base-uri%20http://example.com
 
     """
-    meta = {}
-    meta['policy'] = "default-src 'none"
+    meta = request.args.get('meta')
     allow = request.args.get('allow')
     header = request.args.get('header')
     policy = request.args.get('policy')
-    if policy:
-        meta['policy'] = policy
 
+    response = make_response(render_template('base-uri.html', meta=meta,
+                             allow=allow, policy=policy))
     if header:
-        response = make_response(render_template('base-uri.html', meta=None,
-                                                 allow=allow))
-    else:
-        response = make_response(render_template('base-uri.html', meta=meta,
-                                                 allow=allow))
-    if header:
-        response.headers['Content-Security-Policy'] = meta['policy']
+        response.headers['Content-Security-Policy'] = policy
     return response
 
 

@@ -2,7 +2,7 @@
 <html>
     <head>
         {% if meta %}
-            <meta http-equiv="Content-Security-Policy" content="{{ meta['policy'] }}">
+            <meta http-equiv="Content-Security-Policy" content="{{ policy }}">
         {% endif %}
         <meta charset="UTF-8">
         {% block script %}{% endblock %}

@@ -17,12 +17,13 @@
             document.body.appendChild(res);
             console.log({result: result});
         }
-        var result = document.URL == document.baseURI ? 'Pass': 'Fail';
+
         {% if allow %}
         var result = document.URL !== document.baseURI ? 'Pass': 'Fail';
+        {% else %}
+        var result = document.URL == document.baseURI ? 'Pass': 'Fail';
         {% endif %}
-        // document.body.innerHTML = result;
-        // document.getElementById('result').innerHTML = result;
+
         addTestReults(result);
     </script>
 {% endblock %}
