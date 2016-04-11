@@ -46,11 +46,11 @@ def child_src():
     frame
 
     Allow:
-    http://127.0.0.1:8000/child-src?frame=true&allow=true&policy=child-src 'self';
+    http://127.0.0.1:8000/child-src?meta=true&frame=true&allow=true&policy=child-src 'self';
     http://127.0.0.1:8000/child-src?frame=true&allow=true&header=true&policy=child-src 'self';
     Block:
-    http://127.0.0.1:8000/child-src?frame=true&policy=child-src 'none';
-    http://127.0.0.1:8000/child-src?frame=true&header=true&policy=child-src 'none';
+    http://127.0.0.1:8000/child-src?meta=true&frame=true&policy=child-src 'none';
+    http://127.0.0.1:8000/child-src?header=true&frame=true&header=true&policy=child-src 'none';
 
     worker:
 
@@ -71,26 +71,20 @@ def child_src():
     http://127.0.0.1:8000/child-src?shared=true&header=true&policy=child-src 'none';
 
     """
-    meta = {}
+
+    meta = request.args.get('meta')
     allow = request.args.get('allow')
     header = request.args.get('header')
     policy = request.args.get('policy')
     frame = request.args.get('frame')
     worker = request.args.get('worker')
     shared = request.args.get('shared')
-    if policy:
-        meta['policy'] = policy
 
+    response = make_response(render_template('child-src.html', meta=meta,
+                             allow=allow, frame=frame, worker=worker,
+                             shared=shared, policy=policy))
     if header:
-        response = make_response(render_template('child-src.html', meta=None,
-                                                 allow=allow, frame=frame,
-                                                 worker=worker, shared=shared))
-    else:
-        response = make_response(render_template('child-src.html', meta=meta,
-                                                 allow=allow, frame=frame,
-                                                 worker=worker, shared=shared))
-    if header:
-        response.headers['Content-Security-Policy'] = meta['policy']
+        response.headers['Content-Security-Policy'] = policy
     return response
 
 

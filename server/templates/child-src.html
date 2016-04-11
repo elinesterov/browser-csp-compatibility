@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block script %}
     <script src="/static/js/child-src-test.js"></script>
+    <script type="text/javascript">
+        function addTestReults(results){
+            document.getElementById('result').innerHTML = results;
+            console.log(results);
+        }
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -29,4 +35,5 @@
             {% endif %}
         {% endif %}
     </script>
+    <div id="result"></div>
 {% endblock %}
