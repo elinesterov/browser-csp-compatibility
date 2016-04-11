@@ -1,8 +1,8 @@
 from utils.config import config
 
 
-def generate_test_url(policy="default-src 'none'", meta=False, header=False,
-                      allow=False, fixture_url=''):
+def generate_test_url(policy="default-src 'none'", meta=False,
+                      header=False, allow=False, fixture_url='', params=False):
     """
     Generates test URL
 
@@ -20,9 +20,13 @@ def generate_test_url(policy="default-src 'none'", meta=False, header=False,
         q_str += 'meta=True&'
     if header is True:
         q_str += 'header=True&'
+    if params:
+        q_str += '{}&'.format(params)
     q_str += 'policy={}'.format(policy)
 
-    return 'http://{}:{}/{}?{}'.format(config['server_address'],
-                                       config['server_port'],
-                                       fixture_url,
-                                       q_str)
+    url = 'http://{}:{}/{}?{}'.format(config['server_address'],
+                                      config['server_port'],
+                                      fixture_url,
+                                      q_str)
+    print(url)
+    return url
