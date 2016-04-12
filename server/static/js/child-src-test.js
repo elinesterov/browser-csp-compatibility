@@ -1,21 +1,36 @@
 var EXPECT_BLOCK = true;
 var EXPECT_LOAD = false;
 var iframe;
+var checkResultsTimeout = 500;
 
 function injectFrame(url, shouldBlock) {
     window.onload = function () {
         iframe = document.createElement('iframe');
-        iframe.onload = iframeLoaded(shouldBlock);
+        // iframe.onload = iframeLoaded(shouldBlock);
         /* BUG:
            because of issue with iframe.onload https://bugzilla.mozilla.org/show_bug.cgi?id=444165
            it doesn't work properly in Firefox :( seems when Firefox blocks URL loading
            due to CSP violation, behavior is exactly the same as in issue above.
         */
-        //iframe.onerror = console.log('onerror fired');//iframeLoaded(console.log('onerror fired'));
         iframe.src = url;
         document.body.appendChild(iframe);
+        setTimeout(function(){checkIframeTestResults(shouldBlock);}, checkResultsTimeout);
     };
 }
+
+function checkIframeTestResults(expectBlock){
+    if (expectBlock && typeof window.top.__test === 'undefined'){
+        testPassed('iFrame should be blocked and was blocked');
+    } else if (expectBlock && typeof window.top.__test !== 'undefined'){
+        testFailed('iFrame should be blocked but was not');
+    } else if (!expectBlock && typeof window.top.__test !== 'undefined'){
+        testPassed('iFrame should be loaded and it was');
+    } else if (!expectBlock && typeof window.top.__test === 'undefined'){
+        testFailed('iFrame should be loaded but  it was not');
+    }
+
+}
+
 
 function iframeLoaded(expectBlock) {
     return function(ev) {
@@ -72,7 +87,6 @@ function injectWorker(url, expectBlock) {
     window.onload = function() {
 
         var got_error = false;
-        var checkResultsTimeout = 500;
 
         try{
             var worker = new Worker(url);

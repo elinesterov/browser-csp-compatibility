@@ -2,5 +2,6 @@
 {% block script %}
     <script>
         console.log('{{ state }} from iFrame');
+        window.top.__test = 'passed';
     </script>
 {% endblock %}

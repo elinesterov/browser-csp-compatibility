@@ -3,7 +3,11 @@
     <script src="/static/js/child-src-test.js"></script>
     <script type="text/javascript">
         function addTestReults(results){
-            document.getElementById('result').innerHTML = results;
+            res = document.createElement('div');
+            res.setAttribute('id', 'result');
+            res.innerHTML = results;
+            document.body.appendChild(res);
+            // document.getElementById('result').innerHTML = results;
             console.log(results);
         }
     </script>
@@ -35,5 +39,5 @@
             {% endif %}
         {% endif %}
     </script>
-    <div id="result"></div>
+    <!-- <div id="result"></div> -->
 {% endblock %}
