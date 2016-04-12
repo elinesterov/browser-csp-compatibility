@@ -25,17 +25,17 @@
 
         {% if worker %}
             {% if allow %}
-            injectWorker("/js/alert/pass", EXPECT_LOAD);
+            injectWorker("/js/alert/pass", EXPECT_LOAD, WORKER);
             {% else %}
-            injectWorker("/js/alert/fail", EXPECT_BLOCK);
+            injectWorker("/js/alert/fail", EXPECT_BLOCK, WORKER);
             {% endif %}
         {% endif %}
 
         {% if shared %}
             {% if allow %}
-            injectSharedWorker("/js/alert/pass", EXPECT_LOAD);
+            injectWorker("/js/alert/pass", EXPECT_LOAD, SHARED_WORKER);
             {% else %}
-            injectSharedWorker("/js/alert/fail", EXPECT_BLOCK);
+            injectWorker("/js/alert/fail", EXPECT_BLOCK, SHARED_WORKER);
             {% endif %}
         {% endif %}
     </script>
