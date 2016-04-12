@@ -31,7 +31,12 @@ def test_child_src_iframe_blocked(browser, header, meta):
                             fixture_url='child-src', params=params)
     page = BasePage(browser).open(url)
     res = page.get_test_results()
-    if browser.name == 'firefox':
-        assert (res == '')
-    else:
-        assert (res == 'Pass')
+    assert (res == 'Pass')
+
+# TODO: - add test for redirect
+#       - add test for different ways of adding iFrame element:
+#           - appendChild
+#           - replaceChild
+#           - insertBefore
+#           - innerHTML
+#           - insertAdjacentHTML
