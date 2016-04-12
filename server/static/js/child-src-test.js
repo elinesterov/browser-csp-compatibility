@@ -1,5 +1,7 @@
 var EXPECT_BLOCK = true;
 var EXPECT_LOAD = false;
+var SHARED_WORKER = true;
+var WORKER = false;
 var iframe;
 var checkResultsTimeout = 500;
 
@@ -75,21 +77,37 @@ function shouldThrow(worker, error){
 function shouldNotThrow(worker, error){
     if (typeof worker === 'undefined' || error === true) {
         
-        testFailed('Worker is not Blocked but it should');
+        testFailed('Worker is Blocked but it should not');
     }
     else {
-        testPassed('Worker is Blocked');
+        testPassed('Worker is not Blocked');
     }
 }
 
-function injectWorker(url, expectBlock) {
+function injectWorker(url, expectBlock, shared) {
 
     window.onload = function() {
 
         var got_error = false;
 
         try{
-            var worker = new Worker(url);
+            if (shared) {
+                var worker = new SharedWorker(url);
+                /* BUG: ??? in Firefox seems when create SharedWorker, it 'saves'? it's CSP
+                so if you open page with CSP that allow child-src e.g. child-src 'slef',
+                and then change policy to child-src 'none' and refresh page worker created, and
+                it's code will be executed. It doesn't happen in Chrome.
+                */
+                worker.port.start();
+                worker.port.postMessage('ping');
+                worker.port.onmessage = function(e) {
+                    console.log('Message received from worker :' + e.data);
+                }
+
+            }
+            else {
+                var worker = new Worker(url);
+            }
             /*  BUG: ???
                 request to create a worker from URL /js/alert/<state>
                 will be blocked if not allowed by CSP policy, but in Firefox 
@@ -97,42 +115,35 @@ function injectWorker(url, expectBlock) {
                 To workaround, I didn't find better solution that catch error via worker.onerror
                 and then, after checkResultsTimeout, check if error has been thrown.
                 That slows down test, but I don't see a better alternative at this point
-                Also the fact that I rely on variable passed to eval is not a god idea :(
             */
             worker.onerror = function(err){
                 if (err.message.indexOf('Failed to load script') != -1){
                     got_error = true;
                 }
             };
+
+            setTimeout(checkResults, checkResultsTimeout)
         }
         catch (e) {
             console.log('exception thrown ', e);
+            /* for browsers that doesn't support SharedWorker
+               just fail 
+            */
+            addTestReults('Fail');
         }
-
-        setTimeout(checkResults, checkResultsTimeout)
 
         function checkResults(){
             if (expectBlock == EXPECT_BLOCK){
                 shouldThrow(worker, got_error);
             }
-            else{
+            else {
                 shouldNotThrow(worker, got_error);
             }
+            finishJSTest();
         }
-
-        finishJSTest();
     };
 }
 
-function injectSharedWorker(url, expectBlock) {
-    window.onload = function() {
-        if (expectBlock == EXPECT_BLOCK)
-            shouldThrow("var w = new SharedWorker('" + url + "');");
-        else
-            shouldNotThrow("var w = new SharedWorker('" + url + "');");
-        finishJSTest();
-    };
-}
 
 function testPassed(message){
     console.log("PASSED " + message);

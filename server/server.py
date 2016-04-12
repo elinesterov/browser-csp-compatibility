@@ -196,7 +196,20 @@ def echo():
 
 @app.route('/js/alert/<state>')
 def alert_js(state):
-    data = 'console.log("%s")' % state
+    data = ''' 
+    onconnect = function(e) {
+    var port = e.ports[0];
+
+    port.addEventListener('message', function(e) {
+      var workerResult = 'Result: ' + (e.data);
+      console.log('Result: ' + e.data);
+      port.postMessage(workerResult);
+    });
+
+    port.start();
+    }
+    '''
+    data = data + 'console.log("%s")' % state
     resp = Response(response=data, status=200, mimetype="text/javascript")
     return(resp)
 
