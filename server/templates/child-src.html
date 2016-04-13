@@ -15,29 +15,28 @@
 
 {% block body %}
     <script>
-        {% if frame %}
-            {% if allow %}
+        {% if params.frame %}
+            {% if params.allow %}
             injectFrame("/alert/pass", EXPECT_LOAD);
             {% else %}
             injectFrame("/alert/fail", EXPECT_BLOCK);
             {% endif %}
         {% endif %}
 
-        {% if worker %}
-            {% if allow %}
+        {% if params.worker %}
+            {% if params.allow %}
             injectWorker("/js/alert/pass", EXPECT_LOAD, WORKER);
             {% else %}
             injectWorker("/js/alert/fail", EXPECT_BLOCK, WORKER);
             {% endif %}
         {% endif %}
 
-        {% if shared %}
-            {% if allow %}
+        {% if params.shared %}
+            {% if params.allow %}
             injectWorker("/js/alert/pass", EXPECT_LOAD, SHARED_WORKER);
             {% else %}
             injectWorker("/js/alert/fail", EXPECT_BLOCK, SHARED_WORKER);
             {% endif %}
         {% endif %}
     </script>
-    <!-- <div id="result"></div> -->
 {% endblock %}

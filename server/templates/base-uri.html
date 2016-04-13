@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block body %}
-    <!-- <div id="result"></div> -->
     <script>
         function addTestReults(results){
             res = document.createElement('div');
@@ -18,7 +17,7 @@
             console.log({result: result});
         }
 
-        {% if allow %}
+        {% if params.allow %}
         var result = document.URL !== document.baseURI ? 'Pass': 'Fail';
         {% else %}
         var result = document.URL == document.baseURI ? 'Pass': 'Fail';

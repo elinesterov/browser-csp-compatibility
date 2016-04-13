@@ -7,6 +7,19 @@ app = Flask(__name__)
 DEFAULT_POLICY = "default-src 'none"
 
 
+def request_handler(template, params):
+    """
+    Method tha generates response based on given template and set of parameters
+    """
+    if 'header' not in params.keys():
+        params['header'] = None
+    print(params)
+    response = make_response(render_template(template, params=params))
+    if params['header']:
+        response.headers['Content-Security-Policy'] = params['policy']
+    return response
+
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
@@ -26,16 +39,13 @@ def base_uri():
     http://127.0.0.1:8000/base-uri?header=true&allow=true&policy=base-uri%20http://example.com
 
     """
-    meta = request.args.get('meta')
-    allow = request.args.get('allow')
-    header = request.args.get('header')
-    policy = request.args.get('policy')
+    params = {}
+    params['meta'] = request.args.get('meta')
+    params['allow'] = request.args.get('allow')
+    params['header'] = request.args.get('header')
+    params['policy'] = request.args.get('policy')
 
-    response = make_response(render_template('base-uri.html', meta=meta,
-                             allow=allow, policy=policy))
-    if header:
-        response.headers['Content-Security-Policy'] = policy
-    return response
+    return request_handler('base-uri.html', params)
 
 
 @app.route('/child-src')
@@ -71,21 +81,16 @@ def child_src():
     http://127.0.0.1:8000/child-src?shared=true&header=true&policy=child-src 'none';
 
     """
+    params = {}
+    params['meta'] = request.args.get('meta')
+    params['allow'] = request.args.get('allow')
+    params['header'] = request.args.get('header')
+    params['policy'] = request.args.get('policy')
+    params['frame'] = request.args.get('frame')
+    params['worker'] = request.args.get('worker')
+    params['shared'] = request.args.get('shared')
 
-    meta = request.args.get('meta')
-    allow = request.args.get('allow')
-    header = request.args.get('header')
-    policy = request.args.get('policy')
-    frame = request.args.get('frame')
-    worker = request.args.get('worker')
-    shared = request.args.get('shared')
-
-    response = make_response(render_template('child-src.html', meta=meta,
-                             allow=allow, frame=frame, worker=worker,
-                             shared=shared, policy=policy))
-    if header:
-        response.headers['Content-Security-Policy'] = policy
-    return response
+    return request_handler('child-src.html', params)
 
 
 @app.route('/connect-src')
@@ -172,8 +177,9 @@ def csp_header_send():
 
 @app.route('/alert/<state>')
 def alert(state):
-    response = make_response(render_template('alert.html', state=state))
-    return response
+    params = {}
+    params['state'] = state
+    return request_handler('alert.html', params)
 
 
 @app.route('/echo', methods=['GET', 'POST'])
@@ -196,7 +202,7 @@ def echo():
 
 @app.route('/js/alert/<state>')
 def alert_js(state):
-    data = ''' 
+    data = '''
     onconnect = function(e) {
     var port = e.ports[0];
 
