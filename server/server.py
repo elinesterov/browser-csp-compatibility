@@ -1,10 +1,21 @@
 import sys
+import logging
 
 from flask import Flask, render_template, make_response, request, Response
 
 
+DEFAULT_POLICY = "default-src 'none'"
+LOGGER_FILE_NAME = 'access.log'
+
 app = Flask(__name__)
-DEFAULT_POLICY = "default-src 'none"
+
+logger = logging.getLogger('werkzeug')
+handler = logging.FileHandler(LOGGER_FILE_NAME)
+logger.addHandler(handler)
+
+# Also add the handler to Flask's logger for cases
+# where Werkzeug isn't used as the underlying WSGI server.
+app.logger.addHandler(handler)
 
 
 def request_handler(template, params):
@@ -101,10 +112,10 @@ def connect_src():
     Beacon:
 
     Allow:
-    http://127.0.0.1:8000/connect-src?beacon=true&allow=true&policy=connect-src http://127.0.0.1:8000
+    http://127.0.0.1:8000/connect-src?beacon=true&allow=true&meta=true&policy=connect-src http://127.0.0.1:8000
     http://127.0.0.1:8000/connect-src?beacon=true&allow=true&header=true&policy=connect-src http://127.0.0.1:8000
     Block:
-    http://127.0.0.1:8000/connect-src?beacon=true&policy=connect-src http://localhost:8000;
+    http://127.0.0.1:8000/connect-src?beacon=true&meta=true&policy=connect-src http://localhost:8000;
     http://127.0.0.1:8000/connect-src?beacon=true&header=true&policy=connect-src http://localhost:8008;
 
     XHR
@@ -116,31 +127,42 @@ def connect_src():
     http://127.0.0.1:8000/connect-src?xhr=true&policy=connect-src http://localhost:8000;
     http://127.0.0.1:8000/connect-src?xhr=true&header=true&policy=connect-src http://localhost:8000;
     """
-    meta = {}
-    allow = request.args.get('allow')
-    header = request.args.get('header')
-    policy = request.args.get('policy')
-    beacon = request.args.get('beacon')
-    event = request.args.get('event')
-    websocket = request.args.get('websocket')
-    xhr = request.args.get('xhr')
+    params = {}
+    params['meta'] = request.args.get('meta')
+    params['allow'] = request.args.get('allow')
+    params['header'] = request.args.get('header')
+    params['policy'] = request.args.get('policy')
+    params['beacon'] = request.args.get('beacon')
+    params['event'] = request.args.get('event')
+    params['websocket'] = request.args.get('websocket')
+    params['xhr'] = request.args.get('xhr')
 
-    if policy:
-        meta['policy'] = policy
+    return request_handler('connect-src.html', params)
+    # meta = {}
+    # allow = request.args.get('allow')
+    # header = request.args.get('header')
+    # policy = request.args.get('policy')
+    # beacon = request.args.get('beacon')
+    # event = request.args.get('event')
+    # websocket = request.args.get('websocket')
+    # xhr = request.args.get('xhr')
 
-    if header:
-        response = make_response(render_template('connect-src.html', meta=None,
-                                                 allow=allow, xhr=xhr,
-                                                 beacon=beacon, event=event,
-                                                 websocket=websocket))
-    else:
-        response = make_response(render_template('connect-src.html', meta=meta,
-                                                 allow=allow, xhr=xhr,
-                                                 beacon=beacon, event=event,
-                                                 websocket=websocket))
-    if header:
-        response.headers['Content-Security-Policy'] = meta['policy']
-    return response
+    # if policy:
+    #     meta['policy'] = policy
+
+    # if header:
+    #     response = make_response(render_template('connect-src.html', meta=None,
+    #                                              allow=allow, xhr=xhr,
+    #                                              beacon=beacon, event=event,
+    #                                              websocket=websocket))
+    # else:
+    #     response = make_response(render_template('connect-src.html', meta=meta,
+    #                                              allow=allow, xhr=xhr,
+    #                                              beacon=beacon, event=event,
+    #                                              websocket=websocket))
+    # if header:
+    #     response.headers['Content-Security-Policy'] = meta['policy']
+    # return response
 
 
 @app.route('/form-action')
