@@ -16,7 +16,7 @@ ENV/
 *.json
 
 # test server log
-server.out
+access.log
 
 # java files e.g. selenium-server
 *.jar
