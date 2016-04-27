@@ -138,31 +138,6 @@ def connect_src():
     params['xhr'] = request.args.get('xhr')
 
     return request_handler('connect-src.html', params)
-    # meta = {}
-    # allow = request.args.get('allow')
-    # header = request.args.get('header')
-    # policy = request.args.get('policy')
-    # beacon = request.args.get('beacon')
-    # event = request.args.get('event')
-    # websocket = request.args.get('websocket')
-    # xhr = request.args.get('xhr')
-
-    # if policy:
-    #     meta['policy'] = policy
-
-    # if header:
-    #     response = make_response(render_template('connect-src.html', meta=None,
-    #                                              allow=allow, xhr=xhr,
-    #                                              beacon=beacon, event=event,
-    #                                              websocket=websocket))
-    # else:
-    #     response = make_response(render_template('connect-src.html', meta=meta,
-    #                                              allow=allow, xhr=xhr,
-    #                                              beacon=beacon, event=event,
-    #                                              websocket=websocket))
-    # if header:
-    #     response.headers['Content-Security-Policy'] = meta['policy']
-    # return response
 
 
 @app.route('/form-action')

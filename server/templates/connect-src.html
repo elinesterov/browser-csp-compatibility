@@ -8,29 +8,48 @@
         console.log(msg);
     }
 
+    function addTestReults(results){
+        res = document.createElement('div');
+        res.setAttribute('id', 'result');
+        res.innerHTML = results;
+        document.body.appendChild(res);
+        console.log(results);
+    }
+
+    function testPassed(message){
+        console.log("PASSED " + message);
+        addTestReults('Pass');
+    }
+
+    function testFailed(message){
+        console.log("Failed " + message);
+        addTestReults('Fail');
+    }
+
     try {
-        {% if xhr %}
-        var xhr = new XMLHttpRequest;
-        xhr.open("GET", "/js/alert/test", true);
-        xhr.send();
-        {% elif beacon %}
-        var es = navigator.sendBeacon("/echo", "blah");
-        {% elif event %}
-        var es = new EventSource("/events");
-        {% elif websocket %}
-        var ws = new WebSocket("ws://127.0.0.1:8000/echo");
+        {% if params.xhr %}
+            var xhr = new XMLHttpRequest;
+            xhr.open("GET", "/ping", true);
+            xhr.send();
+        {% elif params.beacon %}
+            var es = navigator.sendBeacon("/echo", "blah");
+        {% elif params.event %}
+            var es = new EventSource("/events");
+        {% elif params.websocket %}
+            var ws = new WebSocket("ws://127.0.0.1:8000/echo");
         {% endif %}
 
-        {% if allow %}
-        log("Pass");
+        {% if params.allow %}
+            // check if get response
+            testPassed("Pass");
         {% else %}
-        log("Fail");
+            testFailed("Fail");
         {% endif %}
     } catch(e) {
-        {% if allow %}
-        log("Fail");
+        {% if params.allow %}
+            testFailed("Fail");
         {% else %}
-        log("Pass");
+            testPassed("Pass");
         {% endif %}
     }
 </script>
