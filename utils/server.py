@@ -75,15 +75,20 @@ class Server(object):
             f.write('')
             f.close()
 
-    def get_log_messages(self):
+    def is_request_reseived(self, method, url):
         """
-        Method to get log messages from server log
+        Method checks if request to specific url has been received by
+        server.
+        Returns True if yes otherwise returns False
         """
-        with open(self.logfile_name, 'r') as f:
-            f.seek(self.log_pointer)
-            messages = f.readlines()
-            self.log_pointer = f.tell()
-        return messages
+        logs = self.get_new_log_messages()
+        parsed_logs = self._parse_logs(logs)
+        result = False
+        for message in parsed_logs:
+            if (method.lower() == message['method'].lower() and
+               url.lower() == message['url'].lower()):
+                result = True
+        return result
 
     def update_log_pointer(self):
         """
@@ -93,3 +98,36 @@ class Server(object):
         with open(self.logfile_name, 'r') as f:
             f.seek(0, 2)
             self.log_pointer = f.tell()
+
+    def get_new_log_messages(self):
+        """
+        Method to get new log messages from server log
+        'new' means since last call for update_log_pointer
+        """
+        with open(self.logfile_name, 'r') as f:
+            f.seek(self.log_pointer)
+            messages = f.readlines()
+            self.log_pointer = f.tell()
+        return messages
+
+    def _parse_log_message(self, log_message):
+        """
+        Method to parse log message from server log
+        returns dict {'method': 'method_from_log_message',
+                      'url': 'url_from_log_message'}
+        """
+        url = log_message.split(' ')[6]
+        method = log_message.split(' ')[5][1:]
+        return {'method': method,
+                'url': url}
+
+    def _parse_logs(self, logs):
+        """
+        Method to parse log messages
+        Returns array of dict for each log message, parsed by
+        _parse_log_message method
+        """
+        parsed_logs = []
+        for log_message in logs:
+            parsed_logs.append(self._parse_log_message(log_message))
+        return parsed_logs
