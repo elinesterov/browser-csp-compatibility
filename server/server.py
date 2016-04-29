@@ -265,7 +265,7 @@ if __name__ == "__main__":
         if sys.argv[1].isdigit():
             port = int(sys.argv[1])
 
-    print 'Starting test server on port {}'.format(port)
+    print 'Starting test server on port {0}'.format(port)
     app.debug = True
     # app.run('0.0.0.0', port=port)
     app.run(port=port)

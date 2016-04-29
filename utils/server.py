@@ -57,7 +57,7 @@ class Server(object):
         """
         Checks if server is running
         """
-        target_url = 'http://{}:{}/ping'.format(self.address, self.port)
+        target_url = 'http://{0}:{1}/ping'.format(self.address, self.port)
         try:
             response = requests.get(target_url, timeout=1)
         except Exception:
