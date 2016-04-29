@@ -110,17 +110,6 @@ class Server(object):
             self.log_pointer = f.tell()
         return messages
 
-    def _parse_log_message(self, log_message):
-        """
-        Method to parse log message from server log
-        returns dict {'method': 'method_from_log_message',
-                      'url': 'url_from_log_message'}
-        """
-        url = log_message.split(' ')[6]
-        method = log_message.split(' ')[5][1:]
-        return {'method': method,
-                'url': url}
-
     def _parse_logs(self, logs):
         """
         Method to parse log messages
@@ -131,3 +120,15 @@ class Server(object):
         for log_message in logs:
             parsed_logs.append(self._parse_log_message(log_message))
         return parsed_logs
+
+    @staticmethod
+    def _parse_log_message(log_message):
+        """
+        Method to parse log message from server log
+        returns dict {'method': 'method_from_log_message',
+                      'url': 'url_from_log_message'}
+        """
+        url = log_message.split(' ')[6]
+        method = log_message.split(' ')[5][1:]
+        return {'method': method,
+                'url': url}
