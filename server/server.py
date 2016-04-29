@@ -212,7 +212,7 @@ def alert_js(state):
     port.start();
     }
     '''
-    data = data + 'console.log("%s")' % state
+    data = data + 'console.log("{0}")'.format(state)
     resp = Response(response=data, status=200, mimetype="text/javascript")
     return(resp)
 
@@ -242,15 +242,6 @@ def test_header(header, value):
 def jsonp():
     response = make_response(render_template('jsonp.html'))
     return response
-
-
-@app.route('/jsonp-callback')
-def jsonp_callback():
-    callback = request.args.get('callback')
-    data = '%s({"id": "123123", "user": "test"})' % callback
-    resp = Response(response=data, status=200,
-                    mimetype="application/javascript")
-    return(resp)
 
 
 @app.route('/ping')
