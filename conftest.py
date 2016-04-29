@@ -54,7 +54,7 @@ def browser(request):
     """
     print('[Setup]')
     target_browser = request.config.getoption("--browser")
-    print('Starting test using browser: {}'.format(target_browser))
+    print('Starting test using browser: {0}'.format(target_browser))
     driver = utils.webdriver.start_webdriver(target_browser)
 
     def tear_down():

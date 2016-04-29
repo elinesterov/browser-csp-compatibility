@@ -21,10 +21,10 @@ def generate_test_url(policy="default-src 'none'", meta=False,
     if header is True:
         q_str += 'header=True&'
     if params:
-        q_str += '{}&'.format(params)
-    q_str += 'policy={}'.format(policy)
+        q_str += '{0}&'.format(params)
+    q_str += 'policy={0}'.format(policy)
 
-    url = 'http://{}:{}/{}?{}'.format(config['server_address'],
+    url = 'http://{0}:{1}/{2}?{3}'.format(config['server_address'],
                                       config['server_port'],
                                       fixture_url,
                                       q_str)

@@ -2,7 +2,7 @@ from selenium import webdriver
 from config import config
 
 
-driver_url = 'http://{}:{}{}'.format(config['wd_host'],
+driver_url = 'http://{0}:{1}{2}'.format(config['wd_host'],
                                      config['wd_port'],
                                      config['wd_uri'])
 
