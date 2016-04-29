@@ -219,7 +219,7 @@ def alert_js(state):
 
 @app.route('/events')
 def events():
-    data = 'event:ping\n data: hello'
+    data = 'event:ping\ndata: hello\n\n'
     resp = Response(response=data, status=200, mimetype="text/event-stream")
     return(resp)
 

@@ -26,31 +26,63 @@
         addTestReults('Fail');
     }
 
-    try {
-        {% if params.xhr %}
-            var xhr = new XMLHttpRequest;
-            xhr.open("GET", "/ping", true);
-            xhr.send();
-        {% elif params.beacon %}
-            var es = navigator.sendBeacon("/echo", "blah");
-        {% elif params.event %}
-            var es = new EventSource("/events");
-        {% elif params.websocket %}
-            var ws = new WebSocket("ws://127.0.0.1:8000/echo");
-        {% endif %}
+    try{
+        var got_error = false;
+        var allow = false;
+        var CLOSED = 2;
 
         {% if params.allow %}
-            // check if get response
-            testPassed("Pass");
-        {% else %}
-            testFailed("Fail");
+            allow = true;
         {% endif %}
+
+        {% if params.xhr %}
+            var es = new XMLHttpRequest;
+            es.open("GET", "/ping", true);
+            es.send();
+
+        {% elif params.beacon %}
+            var es = navigator.sendBeacon("/echo", "blah");
+
+        {% elif params.event %}
+            var es = new EventSource("/events");
+            /*
+            BUG: on Firefox if CSP blocks server-sent event, EventSource object
+            still successfully created, so we cannot catch it and need later check 
+            if object created, but it's readyState is CLOSED
+            */
+
+        {% elif params.websocket %}
+            var es = new WebSocket("ws://127.0.0.1:8000/echo");
+        {% endif %}
+
+        setTimeout(function(){
+            checkTestResults(allow);
+        }, 500);
+
+        function checkTestResults(expected){
+            if (allow){
+                if (typeof es === 'undefined' || es.readyState == CLOSED){
+                    testFailed('Fail');
+                } else{
+                    testPassed('Pass');
+                }
+            } else {
+                if (typeof es === 'undefined' || es.readyState == CLOSED){
+                    testPassed('Pass');
+                }
+                else {
+                    testFailed('Fail');
+                }
+            }
+        }
+
     } catch(e) {
-        {% if params.allow %}
-            testFailed("Fail");
-        {% else %}
-            testPassed("Pass");
-        {% endif %}
-    }
+            {% if params.allow %}
+                testFailed("Fail");
+            {% else %}
+                testPassed("Pass");
+            {% endif %}
+        }
+
 </script>
 {% endblock %}
