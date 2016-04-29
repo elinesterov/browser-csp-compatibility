@@ -261,11 +261,10 @@ def ping():
 if __name__ == "__main__":
 
     port = 8000
-    if len(sys.argv) > 1:
-        if sys.argv[1].isdigit():
-            port = int(sys.argv[1])
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        port = int(sys.argv[1])
 
-    print 'Starting test server on port {0}'.format(port)
+    print('Starting test server on port {0}'.format(port))
     app.debug = True
     # app.run('0.0.0.0', port=port)
     app.run(port=port)
