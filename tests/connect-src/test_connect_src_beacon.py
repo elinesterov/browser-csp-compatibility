@@ -20,7 +20,7 @@ def test_connect_src_beacon_allowed(browser, header, meta):
     page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
-    assert server.is_request_reseived('post', '/echo')
+    assert server.is_request_received('post', '/echo')
 
 
 @pytest.mark.parametrize("header, meta", [(True, False), (False, True)])
@@ -37,4 +37,4 @@ def test_connect_src_beacon_blocked(browser, header, meta):
     page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
-    assert not server.is_request_reseived('post', '/echo')
+    assert not server.is_request_received('post', '/echo')

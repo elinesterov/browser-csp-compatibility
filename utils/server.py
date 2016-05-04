@@ -3,6 +3,8 @@ import subprocess
 import requests
 import time
 
+from urlparse import urlparse
+
 from config import config
 
 
@@ -75,18 +77,25 @@ class Server(object):
             f.write('')
             f.close()
 
-    def is_request_reseived(self, method, url):
+    def is_request_received(self, method, url, ignore_query=False):
         """
         Method checks if request to specific url has been received by
         server.
+        if path_only set to True, then only query string will be ignored during
+        comparison.
         Returns True if yes otherwise returns False
         """
         logs = self.get_new_log_messages()
         parsed_logs = self._parse_logs(logs)
         result = False
         for message in parsed_logs:
+            if ignore_query:
+                msg_url = urlparse(message['url'].lower()).path
+            else:
+                msg_url = message['url'].lower()
+
             if (method.lower() == message['method'].lower() and
-               url.lower() == message['url'].lower()):
+               url.lower() == msg_url):
                 result = True
         return result
 
