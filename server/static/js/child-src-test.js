@@ -129,7 +129,12 @@ function injectWorker(url, expectBlock, shared) {
             /* for browsers that doesn't support SharedWorker
                just fail 
             */
-            addTestReults('Fail');
+            if (expectBlock == EXPECT_BLOCK){
+                addTestReults('Pass');
+            }
+            else {
+                addTestReults('Fail');
+            }
         }
 
         function checkResults(){
