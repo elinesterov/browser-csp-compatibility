@@ -142,24 +142,25 @@ def connect_src():
 
 @app.route('/form-action')
 def form_action():
-    meta = {}
-    allow = request.args.get('allow')
-    header = request.args.get('header')
-    policy = request.args.get('policy')
-    method = request.args.get('method')
+    """
+    Test uri for form-action directive:
+    Allow:
+    http://127.0.0.1:8000/form-action?allow=true&meta=true&policy=form-action 'self'
+    http://127.0.0.1:8000/form-action?allow=true&header=true&policy=form-action 'self'
+    Block:
+    http://127.0.0.1:8000/form-action?meta=true&policy=form-action 'none'
+    http://127.0.0.1:8000/form-action?header=true&policy=form-action 'none'
 
-    if policy:
-        meta['policy'] = policy
+    """
 
-    if header:
-        response = make_response(render_template('form-action.html', meta=None,
-                                                 allow=allow, method=method))
-    else:
-        response = make_response(render_template('form-action.html', meta=meta,
-                                                 allow=allow, method=method))
-    if header:
-        response.headers['Content-Security-Policy'] = meta['policy']
-    return response
+    params = {}
+    params['meta'] = request.args.get('meta')
+    params['allow'] = request.args.get('allow')
+    params['header'] = request.args.get('header')
+    params['policy'] = request.args.get('policy')
+    params['method'] = request.args.get('method')
+
+    return request_handler('form-action.html', params)
 
 
 @app.route('/csp-header')
