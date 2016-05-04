@@ -1,6 +1,6 @@
 import pytest
 
-from utils.page_model import BasePage
+from utils.page_model import TestResultPage
 from utils.server import Server
 from utils.config import config
 from tests.common import generate_test_url
@@ -18,7 +18,7 @@ def test_connect_src_websocket_allowed(browser, header, meta):
     server.update_log_pointer()
     url = generate_test_url(policy, header=header, meta=meta, allow=True,
                             fixture_url='connect-src', params=params)
-    page = BasePage(browser).open(url)
+    page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
     assert server.is_request_reseived('get', '/echo')
@@ -36,7 +36,7 @@ def test_connect_src_websocket_blocked(browser, header, meta):
     server.update_log_pointer()
     url = generate_test_url(policy, header=header, meta=meta, allow=False,
                             fixture_url='connect-src', params=params)
-    page = BasePage(browser).open(url)
+    page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
     assert not server.is_request_reseived('get', '/echo')

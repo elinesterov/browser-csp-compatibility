@@ -1,6 +1,6 @@
 import pytest
 
-from utils.page_model import BasePage
+from utils.page_model import TestResultPage
 
 from tests.common import generate_test_url
 
@@ -14,7 +14,7 @@ def test_child_src_iframe_allowed(browser, header, meta):
     params = "frame=true"
     url = generate_test_url(policy, header=header, meta=meta, allow=True,
                             fixture_url='child-src', params=params)
-    page = BasePage(browser).open(url)
+    page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
 
@@ -29,7 +29,7 @@ def test_child_src_iframe_blocked(browser, header, meta):
     params = "frame=true"
     url = generate_test_url(policy, header=header, meta=meta, allow=False,
                             fixture_url='child-src', params=params)
-    page = BasePage(browser).open(url)
+    page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
 

@@ -1,6 +1,6 @@
 import pytest
 
-from utils.page_model import BasePage
+from utils.page_model import TestResultPage
 
 from tests.common import generate_test_url
 
@@ -22,7 +22,7 @@ def test_base_uri_change_allowed(browser, header, meta):
     policy = 'base-uri http://example.com'
     url = generate_test_url(policy, header=header, meta=meta, allow=True,
                             fixture_url='base-uri')
-    page = BasePage(browser).open(url)
+    page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
 
@@ -35,6 +35,6 @@ def test_base_uri_change_blocked(browser, header, meta):
     policy = "base-uri 'self'"
     url = generate_test_url(policy, header=header, meta=meta, allow=False,
                             fixture_url='base-uri')
-    page = BasePage(browser).open(url)
+    page = TestResultPage(browser).open(url)
     res = page.get_test_results()
     assert (res == 'Pass')
