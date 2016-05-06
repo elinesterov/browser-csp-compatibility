@@ -163,6 +163,20 @@ def form_action():
     return request_handler('form-action.html', params)
 
 
+@app.route('/font-src')
+def font_src():
+    """
+    Test URI for font-src directive
+    """
+    params = {}
+    params['meta'] = request.args.get('meta')
+    params['allow'] = request.args.get('allow')
+    params['header'] = request.args.get('header')
+    params['policy'] = request.args.get('policy')
+
+    return request_handler('font-src.html', params)
+
+
 @app.route('/csp-header')
 def csp_header_send():
     meta = {}

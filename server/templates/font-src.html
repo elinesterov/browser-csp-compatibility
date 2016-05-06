@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block script %}
+ <style type="text/css" >
+   @font-face {
+    font-family: 'Ostrich';
+    src: url('/static/fonts/ostrich-sans-dashed.woff');
+   }
+   .test {
+        font-family: "Ostrich", serif;
+        font-size: 50px;
+    }
+ </style>
+{% endblock %}
+
+{% block body %}
+
+<script type="text/javascript">
+
+checkResultsTimeout = 50;
+loadedFontSize = 51;
+blockededFontSize = 59;
+shouldBlock = true;
+
+{% if params.allow %}
+shouldBlock = false;
+{% endif %}
+
+    function addTestReults(results){
+        var res = document.createElement('div');
+        res.setAttribute('id', 'result');
+        res.innerHTML = results;
+        document.body.appendChild(res);
+        console.log(results);
+    }
+
+    function css( element, property ) {
+        return window.getComputedStyle( element, null ).getPropertyValue( property );
+    }
+
+    function getTestResults(expectBlock){
+        elementHeight = Number(css(document.getElementById('font-target'), 'height').slice(0,-2));
+        if (expectBlock && elementHeight >= blockededFontSize){
+            addTestReults('Pass');
+        } else if (expectBlock && elementHeight <= loadedFontSize){
+            addTestReults('Fail');
+        } else if (!expectBlock && elementHeight <= loadedFontSize){
+            addTestReults('Pass');
+        } else if (!expectBlock && elementHeight >= blockededFontSize){
+            addTestReults('Fail');
+        }
+    }
+
+
+    window.addEventListener('load', function() {
+            var element = document.createElement('div');
+            element.setAttribute('id', 'font-target');
+            element.setAttribute('class', 'test');
+            element.innerHTML = 'This is Ostrich';
+            document.body.appendChild(element);
+
+            setTimeout(function(){
+                getTestResults(shouldBlock);
+            }, checkResultsTimeout);
+    });
+
+</script>
+
+{% endblock %}

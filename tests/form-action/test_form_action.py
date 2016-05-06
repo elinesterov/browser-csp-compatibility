@@ -47,3 +47,8 @@ def test_form_action_blocked(browser, header, meta, method):
 
     assert not echo_page.on_page(wait_for_page_to_load=True)
     assert not server.is_request_received(method, '/echo', ignore_query=True)
+
+# TODO: add tests:
+# - form-action doesn't fall-back to default-src
+# - action for the form is javasctipt e.g. javascript:submitform()
+# - submitted for get 301/2 redirect to  allowed /not allowed host
