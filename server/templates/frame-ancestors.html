@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block script %}
+    <script src="/static/js/frame-ancestors.js"></script>
+    <script>
+
+        function addTestReults(results){
+            var res = document.createElement('div');
+            res.setAttribute('id', 'result');
+            res.innerHTML = results;
+            document.body.appendChild(res);
+            console.log(results);
+        }
+
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <script type="text/javascript">
+
+    var policy = '{{ params.policy }}';
+    var header = '{{ params.header_c }}';
+
+        {% if params.iframe %}
+
+            {% if params.allow %}
+                injectFrame(policy, header, INJECT_IFRAME, EXPECT_LOAD);
+            {% else %}
+                injectFrame(policy, header, INJECT_IFRAME, EXPECT_BLOCK);
+
+            {% endif %}
+
+        {% elif params.frame %}
+
+            {% if params.allow %}
+                injectFrame(policy, header, INJECT_FRAME, EXPECT_LOAD);
+            {% else %}
+                injectFrame(policy, header, INJECT_FRAME, EXPECT_BLOCK);
+            {% endif %}
+
+        {% endif %}
+    </script>
+
+{% endblock %}

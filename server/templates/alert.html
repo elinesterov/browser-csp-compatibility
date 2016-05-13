@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block script %}
     <script>
-        console.log('{{ state }} from iFrame');
+        console.log('{{ params.state }} from iFrame');
         window.top.__test = 'passed';
     </script>
 {% endblock %}

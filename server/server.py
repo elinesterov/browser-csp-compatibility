@@ -177,6 +177,24 @@ def font_src():
     return request_handler('font-src.html', params)
 
 
+@app.route('/frame-ancestors')
+def frame_ancestors():
+    """
+    Test URI for frame-ancestors directive
+    """
+    params = {}
+    params['meta_c'] = request.args.get('meta')
+    params['header_c'] = request.args.get('header')
+    params['allow'] = request.args.get('allow')
+    params['frame'] = request.args.get('frame')
+    params['iframe'] = request.args.get('iframe')
+    params['object'] = request.args.get('object')
+    params['applet'] = request.args.get('applet')
+    params['policy'] = request.args.get('policy')
+
+    return request_handler('frame-ancestors.html', params)
+
+
 @app.route('/csp-header')
 def csp_header_send():
     meta = {}
@@ -190,6 +208,8 @@ def csp_header_send():
 @app.route('/alert/<state>')
 def alert(state):
     params = {}
+    params['header'] = request.args.get('header')
+    params['policy'] = request.args.get('policy')
     params['state'] = state
     return request_handler('alert.html', params)
 
