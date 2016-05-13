@@ -7,4 +7,5 @@ config['wd_port'] = 4444
 config['wd_uri'] = '/wd/hub'
 config['server_port'] = 8000
 config['server_address'] = '127.0.0.1'
+config['server_name'] = 'localhost'
 config['server_log_filename'] = 'access.log'
